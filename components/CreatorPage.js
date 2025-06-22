@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   fetchuser,
   fetchpayments,
@@ -113,21 +114,23 @@ const CreatorPage = ({ username }) => {
   return (
     <>
       <div className="cover w-full bg-red-50 relative">
-        <img
-          className="object-cover w-full h-48 md:h-[350px] shadow-blue-700 shadow-sm"
-          src={
-            currentUser.coverpic && currentUser.coverpic !== ""
-              ? currentUser.coverpic
-              : null
-          }
-          alt=""
-        />
+        {currentUser.coverpic ? (
+          <Image
+            className="object-cover w-full h-48 md:h-[350px] shadow-blue-700 shadow-sm"
+            src={currentUser.coverpic?.trim()}
+            width={1920} // Provide reasonable default
+            height={350}
+            alt="Cover Image"
+          />
+        ) : (
+          <div className="bg-gray-300 w-full h-48 md:h-[350px]"></div>
+        )}
         <div className="absolute -bottom-20 right-[33%] md:right-[46%] border-white overflow-hidden border-2 rounded-full size-36">
-          <img
+          <Image
             className="rounded-full object-cover size-36"
             width={128}
             height={128}
-            src={currentUser.profilepic || null}
+            src={currentUser.profilepic?.trim() || null}
             alt=""
           />
         </div>
@@ -149,7 +152,7 @@ const CreatorPage = ({ username }) => {
               {payments.map((p, i) => {
                 return (
                   <li key={i} className="my-4 flex gap-2 items-center">
-                    <img width={33} src="/avatar.gif" alt="user avatar" />
+                    <Image width={33} height={33}  src="/avatar.gif" alt="user avatar" />
                     <span>
                       {`${i + 1}. `}
                       {p.name} donated{" "}

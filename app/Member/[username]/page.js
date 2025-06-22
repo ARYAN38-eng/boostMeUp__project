@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Image from 'next/image';
 import { useRouter } from "next/navigation";
 const Page = () => {
   let genres = [
@@ -111,12 +112,19 @@ const Page = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const scrollRefs = Array.from({ length: 4 }, () => useRef(null));
+  const scrollRef0 = useRef(null);
+  const scrollRef1 = useRef(null);
+  const scrollRef2 = useRef(null);
+  const scrollRef3 = useRef(null);
 
+  const scrollRefs = [scrollRef0, scrollRef1, scrollRef2, scrollRef3];
   const scrollBy = (index, direction) => {
     const ref = scrollRefs[index]?.current;
     if (ref) {
-      ref.scrollBy({ left: direction === "left" ? -1800 : 1800, behavior: "smooth" });
+      ref.scrollBy({
+        left: direction === "left" ? -1800 : 1800,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -206,10 +214,10 @@ const Page = () => {
                     );
                   }}
                 >
-                  <img
+                  <Image height={48} width={48}
                     src={
                       creator.profilepic && creator.profilepic !== ""
-                        ? creator.profilepic
+                        ? creator.profilepic?.trim()
                         : null
                     }
                     alt={creator.name}
@@ -249,13 +257,13 @@ const Page = () => {
           <h2 className="text-3xl font-semibold">Popular this week</h2>
           <div className="flex space-x-2">
             <button
-              onClick={()=> scrollBy(0, "left")}
+              onClick={() => scrollBy(0, "left")}
               className="p-2 bg-gray-800 rounded-full"
             >
               &#9665;
             </button>
             <button
-              onClick={()=> scrollBy(0, "right")}
+              onClick={() => scrollBy(0, "right")}
               className="p-2 bg-gray-800 rounded-full"
             >
               &#9655;
@@ -284,10 +292,10 @@ const Page = () => {
                       key={index}
                       className="bg-gray-900 p-4 rounded-lg flex items-center space-x-4"
                     >
-                      <img
+                      <Image height={72} width={72}
                         src={
                           creator.profilepic && creator.profilepic !== ""
-                            ? creator.profilepic
+                            ? creator.profilepic?.trim()
                             : null
                         }
                         alt={creator.name}
@@ -330,13 +338,13 @@ const Page = () => {
         <h2 className="text-3xl font-semibold mt-5 ml-14">New on BoostMeUp</h2>
         <div className="flex space-x-2 mr-5">
           <button
-            onClick={()=> scrollBy(1,"left")}
+            onClick={() => scrollBy(1, "left")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9665;
           </button>
           <button
-            onClick={()=> scrollBy(1,"right")}
+            onClick={() => scrollBy(1, "right")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9655;
@@ -357,11 +365,11 @@ const Page = () => {
                 key={i}
                 className="flex flex-col"
               >
-                <img
+                <Image height={192} width={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
-                      ? newCreator.profilepic
+                      ? newCreator.profilepic?.trim()
                       : null
                   }
                   alt="creatorImage"
@@ -381,7 +389,7 @@ const Page = () => {
         </div>
         <div className="flex space-x-2 mr-5">
           <button
-            onClick={()=> scrollBy(2)}
+            onClick={() => scrollBy(2)}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9665;
@@ -408,11 +416,11 @@ const Page = () => {
                 key={i}
                 className="flex flex-col"
               >
-                <img
+                <Image height={192} width={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
-                      ? newCreator.profilepic
+                      ? newCreator.profilepic?.trim()
                       : null
                   }
                   alt="creatorImage"
@@ -432,13 +440,13 @@ const Page = () => {
         </div>
         <div className="flex space-x-2 mr-5">
           <button
-            onClick={()=> scrollBy(3,"left")}
+            onClick={() => scrollBy(3, "left")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9665;
           </button>
           <button
-            onClick={()=>scrollBy(3,"right")}
+            onClick={() => scrollBy(3, "right")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9655;
@@ -459,11 +467,11 @@ const Page = () => {
                 key={i}
                 className="flex flex-col"
               >
-                <img
+                <Image height={192} width={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
-                      ? newCreator.profilepic
+                      ? newCreator.profilepic?.trim()
                       : null
                   }
                   alt="creatorImage"

@@ -1,4 +1,3 @@
-
 import React from 'react'
 import PaymentPage from '@/components/PaymentPage'
 import { notFound } from "next/navigation"

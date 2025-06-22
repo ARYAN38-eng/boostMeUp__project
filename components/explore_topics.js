@@ -1,20 +1,22 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
-import { notFound } from 'next/navigation';
-import { useSession } from "next-auth/react"
+import Image from "next/image"
+import { notFound } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import {useRouter} from "next/navigation"
-const ExploreTopicPage = ({category}) => {
-  
-  const router = useRouter()
+import { useRouter } from "next/navigation";
+const ExploreTopicPage = ({ category }) => {
+  const router = useRouter();
   const [creators, setCreators] = useState([]);
   const [all_creators, set_all_creators] = useState([]);
-  useEffect( () => {
+  useEffect(() => {
     const fetchCreators = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/popularcreators",{cache:"no-store"});
-        if(!res.ok){
-          return notFound()
+        const res = await fetch("http://localhost:3000/api/popularcreators", {
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          return notFound();
         }
         const data = await res.json();
         setCreators(data);
@@ -26,43 +28,49 @@ const ExploreTopicPage = ({category}) => {
     fetchCreators();
   }, []);
 
-
   useEffect(() => {
     const fetch_all_creators = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/all_creators",{cache:"no-store"});
-        if(!res.ok){
-          return notFound()
+        const res = await fetch("http://localhost:3000/api/all_creators", {
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          return notFound();
         }
-        const data = await res.json()
+        const data = await res.json();
         set_all_creators(data);
-      } catch(err) {
+      } catch (err) {
         console.error("Error fetching creators:", err);
       }
     };
-  
+
     fetch_all_creators();
   }, []);
-  
 
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  const scrollRef0 = useRef(null);
+  const scrollRef1 = useRef(null);
+  const scrollRef2 = useRef(null);
+  const scrollRef3 = useRef(null);
 
-  const scrollRefs = Array.from({ length: 4 }, () => useRef(null));
-  
-    const scrollBy = (index, direction) => {
-      const ref = scrollRefs[index]?.current;
-      if (ref) {
-        ref.scrollBy({ left: direction === "left" ? -1800 : 1800, behavior: "smooth" });
-      }
-    };
+  const scrollRefs = [scrollRef0, scrollRef1, scrollRef2, scrollRef3];
 
+  const scrollBy = (index, direction) => {
+    const ref = scrollRefs[index]?.current;
+    if (ref) {
+      ref.scrollBy({
+        left: direction === "left" ? -1800 : 1800,
+        behavior: "smooth",
+      });
+    }
+  };
 
-  const {data: session} = useSession()
-  if(!session){
-    return <p>Loading....</p>
+  const { data: session } = useSession();
+  if (!session) {
+    return <p>Loading....</p>;
   }
   return (
     <>
@@ -121,10 +129,10 @@ const ExploreTopicPage = ({category}) => {
                     );
                   }}
                 >
-                  <img
+                  <Image width={48} height={48}
                     src={
                       creator.profilepic && creator.profilepic !== ""
-                        ? creator.profilepic
+                        ? creator.profilepic?.trim()
                         : null
                     }
                     alt={creator.name}
@@ -136,7 +144,6 @@ const ExploreTopicPage = ({category}) => {
               ))}
             </ul>
           )}
-       
         </div>
       </div>
 
@@ -149,13 +156,13 @@ const ExploreTopicPage = ({category}) => {
           <h2 className="text-3xl font-semibold">Popular this week</h2>
           <div className="flex space-x-2">
             <button
-              onClick={()=> scrollBy(0,"left")}
+              onClick={() => scrollBy(0, "left")}
               className="p-2 bg-gray-800 rounded-full"
             >
               &#9665;
             </button>
             <button
-              onClick={()=> scrollBy(0,"right")}
+              onClick={() => scrollBy(0, "right")}
               className="p-2 bg-gray-800 rounded-full"
             >
               &#9655;
@@ -178,12 +185,14 @@ const ExploreTopicPage = ({category}) => {
                   .slice(sectionIndex * 9, (sectionIndex + 1) * 9)
                   .map((creator, index) => (
                     <Link
-                      href={`/Member/${encodeURIComponent(session.user.name)}/${encodeURIComponent(creator.username)}`}
+                      href={`/Member/${encodeURIComponent(
+                        session.user.name
+                      )}/${encodeURIComponent(creator.username)}`}
                       key={index}
                       className="bg-gray-900 p-4 rounded-lg flex items-center space-x-4"
                     >
-                      <img
-                        src={creator.profilepic}
+                      <Image width={72} height={72}
+                        src={creator.profilepic?.trim()}
                         alt={creator.name}
                         className="w-18 h-18 rounded-lg object-cover"
                       />
@@ -203,13 +212,13 @@ const ExploreTopicPage = ({category}) => {
         <h2 className="text-3xl font-semibold mt-5 ml-14">New on BoostMeUp</h2>
         <div className="flex space-x-2 mr-5">
           <button
-            onClick={()=> scrollBy(1,"left")}
+            onClick={() => scrollBy(1, "left")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9665;
           </button>
           <button
-            onClick={()=> scrollBy(1,"right")}
+            onClick={() => scrollBy(1, "right")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9655;
@@ -223,10 +232,16 @@ const ExploreTopicPage = ({category}) => {
         >
           {all_creators.map((newCreator, i) => {
             return (
-              <Link href={`/Member/${encodeURIComponent(session.user.name)}/${encodeURIComponent(newCreator.username)}`} key={i} className="flex flex-col">
-                <img
+              <Link
+                href={`/Member/${encodeURIComponent(
+                  session.user.name
+                )}/${encodeURIComponent(newCreator.username)}`}
+                key={i}
+                className="flex flex-col"
+              >
+                <Image width={192} height={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
-                  src={newCreator.profilepic}
+                  src={newCreator.profilepic?.trim()}
                   alt="creatorImage"
                 />
                 <h3 className="font-bold">{newCreator.name}</h3>
@@ -244,13 +259,13 @@ const ExploreTopicPage = ({category}) => {
         </div>
         <div className="flex space-x-2 mr-5">
           <button
-            onClick={()=> scrollBy(2,"left")}
+            onClick={() => scrollBy(2, "left")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9665;
           </button>
           <button
-            onClick={()=> scrollBy(2,"right")}
+            onClick={() => scrollBy(2, "right")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9655;
@@ -264,10 +279,16 @@ const ExploreTopicPage = ({category}) => {
         >
           {all_creators.map((newCreator, i) => {
             return (
-              <Link href={`/Member/${encodeURIComponent(session.user.name)}/${encodeURIComponent(newCreator.username)}`} key={i} className="flex flex-col">
-                <img
+              <Link
+                href={`/Member/${encodeURIComponent(
+                  session.user.name
+                )}/${encodeURIComponent(newCreator.username)}`}
+                key={i}
+                className="flex flex-col"
+              >
+                <Image width={192} height={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
-                  src={newCreator.profilepic}
+                  src={newCreator.profilepic?.trim()}
                   alt="creatorImage"
                 />
                 <h3 className="font-bold">{newCreator.name}</h3>
@@ -285,13 +306,13 @@ const ExploreTopicPage = ({category}) => {
         </div>
         <div className="flex space-x-2 mr-5">
           <button
-            onClick={()=> scrollBy(3,"left")}
+            onClick={() => scrollBy(3, "left")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9665;
           </button>
           <button
-            onClick={()=> scrollBy(3,"right")}
+            onClick={() => scrollBy(3, "right")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9655;
@@ -305,10 +326,16 @@ const ExploreTopicPage = ({category}) => {
         >
           {all_creators.map((newCreator, i) => {
             return (
-              <Link href={`/Member/${encodeURIComponent(session.user.name)}/${encodeURIComponent(newCreator.username)}`} key={i} className="flex flex-col">
-                <img
+              <Link
+                href={`/Member/${encodeURIComponent(
+                  session.user.name
+                )}/${encodeURIComponent(newCreator.username)}`}
+                key={i}
+                className="flex flex-col"
+              >
+                <Image width={192} height={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
-                  src={newCreator.profilepic}
+                  src={newCreator.profilepic?.trim()}
                   alt="creatorImage"
                 />
                 <h3 className="font-bold">{newCreator.name}</h3>
