@@ -30,7 +30,7 @@ const CreatorPage = ({ username }) => {
   };
 
   const loadVideos = async () => {
-    const res = await fetch(`http://localhost:3000/api/videos/${username}`, {
+    const res = await fetch(`https://boost-me-up-project.vercel.app/api/videos/${username}`, {
       cache: "no-store",
     });
     const data = await res.json();
@@ -48,7 +48,7 @@ const CreatorPage = ({ username }) => {
     formData.append("username", username);
 
     try {
-      const res = await fetch("http://localhost:3000/api/upload", {
+      const res = await fetch("https://boost-me-up-project.vercel.app/api/upload", {
         method: "POST",
         body: formData,
         headers: {

@@ -107,7 +107,7 @@ const PaymentPage = ({ username, creators }) => {
 
   useEffect(() => {
     const loadVideos = async () => {
-      const res = await fetch(`http://localhost:3000/api/videos/${creators}`, {
+      const res = await fetch(`https://boost-me-up-project.vercel.app/api/videos/${creators}`, {
         cache: "no-store",
       });
       const data = await res.json();
@@ -117,7 +117,7 @@ const PaymentPage = ({ username, creators }) => {
   }, [creators]);
 
   const userdata = async () => {
-    const data = await fetch("http://localhost:3000/api/all_creators", {
+    const data = await fetch("https://boost-me-up-project.vercel.app/api/all_creators", {
       cache: "no-store",
     });
     const allCreators = await data.json();

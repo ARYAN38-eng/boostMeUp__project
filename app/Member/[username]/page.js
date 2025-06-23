@@ -30,7 +30,7 @@ const Page = () => {
   useEffect(() => {
     const fetchCreators = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/popularcreators", {
+        const res = await fetch("https://boost-me-up-project.vercel.app/api/popularcreators", {
           cache: "no-store",
         });
         if (!res.ok) {
@@ -50,7 +50,7 @@ const Page = () => {
   useEffect(() => {
     const fetch_all_creators = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/all_creators", {
+        const res = await fetch("https://boost-me-up-project.vercel.app/api/all_creators", {
           cache: "no-store",
         });
         if (!res.ok) {
