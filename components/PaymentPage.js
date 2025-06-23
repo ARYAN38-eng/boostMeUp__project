@@ -75,11 +75,15 @@ const PaymentPage = ({ username, creators }) => {
   }, []);
 
   const pay = async (amount) => {
+    if (!creatordb.razorpayid) {
+    alert("Payment configuration error: Creator has no Razorpay ID.");
+    return;
+  }
     // Get the order Id
     let a = await initiate(amount, username, creators, paymentform);
     let orderId = a.id;
     var options = {
-      key: currentUser.razorpayid, 
+      key: creatordb.razorpayid, 
       amount: amount, 
       currency: "INR",
       name: "BoostMeUp!", 
