@@ -1,47 +1,45 @@
-import formidable from 'formidable';
-import fs from 'fs';
-import path from 'node:path';
-import { Readable } from 'stream';
-import { getToken } from 'next-auth/jwt'
+import formidable from "formidable";
+import { Readable } from "stream";
+import { getToken } from "next-auth/jwt";
+import cloudinary from "@/lib/cloudinary";
+import { NextResponse } from "next/server";
+
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request) {
-  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
   if (!token) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 
+  const contentType = request.headers.get("content-type") || "";
+  const creator = request.headers.get("x-creator-name");
 
-
-
-
-  const contentType = request.headers.get('content-type') || '';
-  const creator = request.headers.get('x-creator-name');
-
-  if (!contentType.startsWith('multipart/form-data') || !creator) {
-    return new Response(JSON.stringify({ error: 'Invalid request' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads', creator);
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+  if (!contentType.startsWith("multipart/form-data") || !creator) {
+    return NextResponse.json(
+      { error: "Invalid request" },
+      {
+        status: 400,
+      }
+    );
   }
 
   const form = formidable({
-    uploadDir,
-    keepExtensions: true,
     multiples: true,
   });
 
@@ -60,30 +58,51 @@ export async function POST(request) {
     },
   });
 
-  // 🛠 Add headers manually to fake a Node-style request
   stream.headers = {
-    'content-type': contentType,
-    'content-length': request.headers.get('content-length') || '0', // fallback if missing
+    "content-type": contentType,
+    "content-length": request.headers.get("content-length") || "0",
   };
 
   return new Promise((resolve, reject) => {
-    form.parse(stream, (err, fields, files) => {
+    form.parse(stream, async (err, fields, files) => {
       if (err) {
-        console.error('Formidable error:', err);
-        return reject(new Response(JSON.stringify({ error: 'Upload failed' }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        }));
+        console.error("Formidable error:", err);
+        return reject(
+          NextResponse.json(
+            { error: "Upload failed" },
+            {
+              status: 500,
+            }
+          )
+        );
       }
 
-      const uploadedFiles = Array.isArray(files.file)
-        ? files.file.map((f) => `/uploads/${creator}/${path.basename(f.filepath)}`)
-        : [`/uploads/${creator}/${path.basename(files.file.filepath)}`];
+      try {
+        const uploadedFiles = [];
+        const fileArray = Array.isArray(files.file) ? files.file : [files.file];
+        for (const file of fileArray) {
+          const result = await cloudinary.uploader.upload(file.filepath, {
+            resource_type: "video",
+            folder: `boostMeUp/${creator}`,
+          });
+          uploadedFiles.push(result.secure_url);
+        }
 
-      resolve(new Response(JSON.stringify({ success: true, files: uploadedFiles }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }));
+        resolve(
+          NextResponse.json(
+            { success: true, files: uploadedFiles },
+            { status: 200 }
+          )
+        );
+      } catch (uploadError) {
+        console.error("Cloudinary upload error: ", uploadError);
+        reject(
+          NextResponse.json(
+            { error: "Cloudinary upload failed" },
+            { status: 500 }
+          )
+        );
+      }
     });
   });
 }
