@@ -30,9 +30,12 @@ const CreatorPage = ({ username }) => {
   };
 
   const loadVideos = async () => {
-    const res = await fetch(`https://boost-me-up-project.vercel.app/api/videos/${username}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `https://boost-me-up-project.vercel.app/api/videos/${username}`,
+      {
+        cache: "no-store",
+      }
+    );
     const data = await res.json();
     setUploadedVideos(data.files);
   };
@@ -44,27 +47,38 @@ const CreatorPage = ({ username }) => {
     }
 
     const formData = new FormData();
-    selectedFile.forEach((file) => formData.append("file", file));
-    formData.append("username", username);
+    formData.append("file", selectedFile[0]); // only one file at a time
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    );
+    formData.append("folder", `boostMeUp/${username}`);
 
     try {
-      const res = await fetch("https://boost-me-up-project.vercel.app/api/upload", {
-        method: "POST",
-        body: formData,
-        headers: {
-          "x-creator-name": username,
-        },
-      });
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data = await res.json();
+
       if (res.ok) {
+        console.log("Uploaded to Cloudinary:", data.secure_url);
         setSelectedFile(null);
-        await loadVideos();
+        setUploadedVideos((prev) => [...prev, data.secure_url]); // instantly show new video
+        await fetch("/api/save-video", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: data.secure_url, username }),
+        });
       } else {
-        console.error("Upload failed:", data.error);
+        console.error("Cloudinary error:", data.error);
       }
     } catch (err) {
-      console.error("Error uploading file:", err);
+      console.error("Upload error:", err);
     }
   };
 
@@ -152,7 +166,12 @@ const CreatorPage = ({ username }) => {
               {payments.map((p, i) => {
                 return (
                   <li key={i} className="my-4 flex gap-2 items-center">
-                    <Image width={33} height={33}  src="/avatar.gif" alt="user avatar" />
+                    <Image
+                      width={33}
+                      height={33}
+                      src="/avatar.gif"
+                      alt="user avatar"
+                    />
                     <span>
                       {`${i + 1}. `}
                       {p.name} donated{" "}
