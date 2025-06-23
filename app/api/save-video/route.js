@@ -1,7 +1,7 @@
 // /app/api/save-video/route.js
 import { NextResponse } from 'next/server';
 import connectDb from "@/db/connectDb"
-import Video from '@/models/video';     
+import Video from '@/models/videos';     
 
 export async function POST(req) {
   try {
