@@ -21,13 +21,13 @@ const CreatorPage = ({ username }) => {
   const [UploadedVideos, setUploadedVideos] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [xhrInstance, setXhrInstance] = useState(null);
-  const [isFileSelected,setIsFileSelected]=useState(false);
+  const [isFileSelected, setIsFileSelected] = useState(false);
   const router = useRouter();
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     setSelectedFile(files);
-    setIsFileSelected(files.length>0);
+    setIsFileSelected(files.length > 0);
   };
 
   const loadVideos = async () => {
@@ -56,9 +56,7 @@ const CreatorPage = ({ username }) => {
 
     const file = selectedFile[0];
     if (file.size > 100 * 1024 * 1024) {
-      toast.warn(
-        `Your video is ${sizeInMB}MB and exceeds the 100MB limit.`
-      );
+      toast.warn(`Your video is ${file.size} MB and exceeds the 100MB limit.`);
       return;
     }
     const formData = new FormData();
@@ -113,7 +111,7 @@ const CreatorPage = ({ username }) => {
     };
 
     xhr.send(formData);
-    SetIsFileSelected(false);
+    setIsFileSelected(false);
   };
   const handleCancelUpload = () => {
     if (xhrInstance) {
@@ -122,7 +120,7 @@ const CreatorPage = ({ username }) => {
       setUploadProgress(0);
       setXhrInstance(null);
       setSelectedFile(null);
-      SetIsFileSelected(false);
+      setIsFileSelected(false);
       toast.warn("Upload cancelled.");
     }
   };
@@ -264,7 +262,9 @@ const CreatorPage = ({ username }) => {
                 whileHover={{ scale: 1.1 }}
               />
             </label>
-
+            {selectedFile && selectedFile.length > 0 && (
+              <p className="text-black">Video Name: {selectedFile[0].name}</p>
+            )}{" "}
             {uploadProgress > 0 && (
               <div className="w-64">
                 <div className="bg-gray-300 rounded-full h-3 overflow-hidden">
@@ -278,7 +278,6 @@ const CreatorPage = ({ username }) => {
                 </p>
               </div>
             )}
-            {isFileSelected && <p>Video Name: {selectedFile[0].name}</p>}
             <div className="flex gap-3 w-full px-4">
               <button
                 onClick={handleUpload}
