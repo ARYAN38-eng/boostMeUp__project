@@ -273,7 +273,7 @@ const CreatorPage = ({ username }) => {
               </button>
               {isUploading &&(
                 <button onClick={handleCancelUpload}
-                className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600">
+                className="bg-red-500 text-white px-4 py-4 mt-6 rounded-md hover:bg-red-600">
                   Cancel
                 </button>
               )}
