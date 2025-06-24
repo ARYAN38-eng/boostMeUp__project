@@ -18,6 +18,7 @@ const CreatorPage = ({ username }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [UploadedVideos, setUploadedVideos] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const router = useRouter();
 
   const handleFileChange = (event) => {
@@ -33,9 +34,7 @@ const CreatorPage = ({ username }) => {
     try {
       const res = await fetch(
         `https://boost-me-up-project.vercel.app/api/videos/${username}`,
-        {
-          cache: "no-store",
-        }
+        { cache: "no-store" }
       );
       const data = await res.json();
       if (res.ok) {
@@ -55,40 +54,48 @@ const CreatorPage = ({ username }) => {
       return;
     }
 
+    const file = selectedFile[0];
     const formData = new FormData();
-    formData.append("file", selectedFile[0]);
-    formData.append(
-      "upload_preset",
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-    );
+    formData.append("file", file);
+    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
     formData.append("folder", `boostMeUp/${username}`);
 
-    try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+    const xhr = new XMLHttpRequest();
+    xhr.open(
+      "POST",
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload`
+    );
 
-      const data = await res.json();
+    xhr.upload.addEventListener("progress", (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        setUploadProgress(percent);
+      }
+    });
 
-      if (res.ok) {
+    xhr.onload = async () => {
+      if (xhr.status === 200) {
+        const data = JSON.parse(xhr.responseText);
         console.log("Uploaded to Cloudinary:", data.secure_url);
         setSelectedFile(null);
+        setUploadProgress(0);
         setUploadedVideos((prev) => [...prev, data.secure_url]);
+
         await fetch("/api/save-video", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ url: data.secure_url, username }),
         });
       } else {
-        console.error("Cloudinary error:", data.error);
+        console.error("Cloudinary error:", xhr.responseText);
       }
-    } catch (err) {
-      console.error("Upload error:", err);
-    }
+    };
+
+    xhr.onerror = () => {
+      console.error("Upload failed.");
+    };
+
+    xhr.send(formData);
   };
 
   useEffect(() => {
@@ -113,10 +120,8 @@ const CreatorPage = ({ username }) => {
       const interval = setInterval(() => {
         setCount((prev) => prev - 1);
       }, 1000);
-
       return () => clearInterval(interval);
     }
-    return () => {};
   }, [session]);
 
   useEffect(() => {
@@ -139,28 +144,28 @@ const CreatorPage = ({ username }) => {
       <div className="cover w-full bg-red-50 relative">
         <Image
           className="object-cover w-full h-48 md:h-[350px] shadow-blue-700 shadow-sm"
-          src={currentUser.coverpic?.trim() || "default-cover.png"}
-          width={1920} 
+          src={currentUser.coverpic?.trim() || "/default-cover.png"}
+          width={1920}
           height={350}
           alt="Cover Image"
         />
-
         <div className="absolute -bottom-20 right-[33%] md:right-[46%] border-white overflow-hidden border-2 rounded-full size-36">
           <Image
             className="rounded-full object-cover size-36"
             width={128}
             height={128}
-            src={currentUser.profilepic?.trim() || "default-profile.jpg"}
-            alt=""
+            src={currentUser.profilepic?.trim() || "/default-profile.jpg"}
+            alt="Profile Image"
           />
         </div>
       </div>
+
       <div className="info flex justify-center items-center my-24 mb-32 flex-col gap-2">
         <div className="font-bold text-lg">@{username}</div>
-        <div className="text-slate-400">Lets help {username} get a chai!</div>
+        <div className="text-slate-400">Let's help {username} get a chai!</div>
         {Allpayments?.length ? (
           <div className="text-slate-400">
-            {Allpayments.length} Payments . ₹
+            {Allpayments.length} Payments • ₹
             {Allpayments.reduce((a, b) => a + b.amount, 0)} raised
           </div>
         ) : (
@@ -169,77 +174,74 @@ const CreatorPage = ({ username }) => {
 
         <div className="payment flex gap-3 w-[80%] mt-11 flex-col md:flex-row">
           <div className="supporters w-full md:w-1/2 bg-slate-900 rounded-lg text-white px-2 md:p-10">
-            {/* Show list of all the supporters as a leaderboard  */}
-            <h2 className="text-2xl font-bold my-5"> Top 10 Supporters</h2>
+            <h2 className="text-2xl font-bold my-5">Top 10 Supporters</h2>
             <ul className="mx-5 text-lg">
-              {payments.length == 0 && <li>No payments yet</li>}
-              {payments.map((p, i) => {
-                return (
-                  <li key={i} className="my-4 flex gap-2 items-center">
-                    <Image
-                      width={33}
-                      height={33}
-                      src="/avatar.gif"
-                      alt="user avatar"
-                    />
-                    <span>
-                      {`${i + 1}. `}
-                      {p.name} donated{" "}
-                      <span className="font-bold">₹{p.amount}</span> with a
-                      message &quot;{p.message}&quot;
-                    </span>
-                  </li>
-                );
-              })}
+              {payments.length === 0 && <li>No payments yet</li>}
+              {payments.map((p, i) => (
+                <li key={i} className="my-4 flex gap-2 items-center">
+                  <Image width={33} height={33} src="/avatar.gif" alt="user avatar" />
+                  <span>
+                    {`${i + 1}. `}{p.name} donated <span className="font-bold">₹{p.amount}</span> with a
+                    message &quot;{p.message}&quot;
+                  </span>
+                </li>
+              ))}
             </ul>
           </div>
-          <div className="bg-white shadow-2xl w-96 h-80 mx-auto rounded-xl">
-            <div className="flex justify-center mt-5">
-              <h1 className="text-black font-semibold text-xl">
-                Upload Your New Content Here
-              </h1>
-            </div>
-            <div className="flex justify-center mt-5">
-              <label className="border-dashed border-2 border-blue-800 flex justify-center h-48 w-64 items-center cursor-pointer relative ">
-                <input
-                  className="absolute h-full w-full opacity-0 cursor-pointer"
-                  type="file"
-                  accept="video/*"
-                  multiple
-                  onChange={handleFileChange}
-                />
-                <motion.img
-                  width={80}
-                  height={80}
-                  className="mb-2"
-                  src="/upload.png"
-                  alt="upload icon"
-                  animate={isUploading ? { rotate: 360 } : {}}
-                  transition={{
-                    duration: 1,
-                    ease: "easeInOut",
-                    repeat: isUploading ? Infinity : 0,
-                  }}
-                  whileHover={{ scale: 1.1 }}
-                />
-              </label>
-            </div>
-            <div className="flex jusitfy-center  mt-20">
-              <button
-                onClick={handleUpload}
-                disabled={!selectedFile}
-                className="bg-blue-600 w-full text-white px-4 py-4 rounded-md hover:bg-blue-700"
-              >
-                Upload Video
-              </button>
-            </div>
+
+          <div className="bg-white shadow-2xl w-96 h-auto mx-auto rounded-xl p-4">
+            <h1 className="text-black font-semibold text-xl text-center mb-3">
+              Upload Your New Content Here
+            </h1>
+            <label className="border-dashed border-2 border-blue-800 flex justify-center h-48 w-64 mx-auto items-center cursor-pointer relative">
+              <input
+                className="absolute h-full w-full opacity-0 cursor-pointer"
+                type="file"
+                accept="video/*"
+                multiple
+                onChange={handleFileChange}
+              />
+              <motion.img
+                width={80}
+                height={80}
+                className="mb-2"
+                src="/upload.png"
+                alt="upload icon"
+                animate={isUploading ? { rotate: 360 } : {}}
+                transition={{
+                  duration: 1,
+                  ease: "easeInOut",
+                  repeat: isUploading ? Infinity : 0,
+                }}
+                whileHover={{ scale: 1.1 }}
+              />
+            </label>
+
+            {uploadProgress > 0 && (
+              <div className="w-64 mx-auto mt-4 bg-gray-300 rounded-full h-4">
+                <div
+                  className="bg-blue-600 h-4 rounded-full"
+                  style={{ width: `${uploadProgress}%` }}
+                ></div>
+                <p className="text-center text-sm mt-1 text-blue-700 font-medium">
+                  {uploadProgress}%
+                </p>
+              </div>
+            )}
+
+            <button
+              onClick={handleUpload}
+              disabled={!selectedFile}
+              className="bg-blue-600 w-full text-white px-4 py-4 mt-6 rounded-md hover:bg-blue-700"
+            >
+              Upload Video
+            </button>
           </div>
         </div>
       </div>
+
       <div className="uploaded-videos my-10">
-        <h2 className="text-5xl font-semibold text-center mb-10">
-          Uploaded Videos
-        </h2>
+        <h2 className="text-5xl font-semibold text-center mb-10">Uploaded Videos</h2>
         {UploadedVideos.length === 0 && (
           <p className="text-center text-gray-500">No videos uploaded yet.</p>
         )}
@@ -247,7 +249,7 @@ const CreatorPage = ({ username }) => {
           {UploadedVideos.map((video, index) => (
             <div
               key={index}
-              className="video-container bg-slate-900  p-10 rounded-lg shadow-lg w-[50%]"
+              className="video-container bg-slate-900 p-10 rounded-lg shadow-lg w-[50%] mx-auto"
             >
               <video controls className="rounded-lg w-full">
                 <source src={video} type="video/mp4" />
