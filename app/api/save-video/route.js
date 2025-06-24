@@ -6,7 +6,7 @@ import Video from '@/models/videos';
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { url, username } = body;
+    const { url, username,name,fileSize } = body;
 
     if (!url || !username) {
       return NextResponse.json({ error: 'Missing data' }, { status: 400 });
@@ -16,6 +16,8 @@ export async function POST(req) {
 
     const newVideo = new Video({
       creator: username,
+      name: name,
+      fileSize:fileSize,
       videoUrl: url,
       uploadedAt: new Date(),
     });

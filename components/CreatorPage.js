@@ -109,7 +109,7 @@ const CreatorPage = ({ username }) => {
         await fetch("/api/save-video", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: data.secure_url, username }),
+          body: JSON.stringify({ url: data.secure_url,username: username, name:selectedFile[0].name,fileSize:formatFileSize(file.size)}),
         });
       } else {
         console.error("Cloudinary error:", xhr.responseText);
