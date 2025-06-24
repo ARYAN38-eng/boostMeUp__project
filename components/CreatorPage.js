@@ -30,14 +30,23 @@ const CreatorPage = ({ username }) => {
   };
 
   const loadVideos = async () => {
-    const res = await fetch(
-      `https://boost-me-up-project.vercel.app/api/videos/${username}`,
-      {
-        cache: "no-store",
+    try {
+      const res = await fetch(
+        `https://boost-me-up-project.vercel.app/api/videos/${username}`,
+        {
+          cache: "no-store",
+        }
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setUploadedVideos(data.files || []);
+      } else {
+        console.error("Error loading videos:", data.error);
       }
-    );
-    const data = await res.json();
-    setUploadedVideos(data.files);
+    } catch (err) {
+      console.error("Failed to fetch videos:", err);
+      setUploadedVideos([]); // fallback
+    }
   };
 
   const handleUpload = async () => {
@@ -47,7 +56,7 @@ const CreatorPage = ({ username }) => {
     }
 
     const formData = new FormData();
-    formData.append("file", selectedFile[0]); // only one file at a time
+    formData.append("file", selectedFile[0]);
     formData.append(
       "upload_preset",
       process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
@@ -68,7 +77,7 @@ const CreatorPage = ({ username }) => {
       if (res.ok) {
         console.log("Uploaded to Cloudinary:", data.secure_url);
         setSelectedFile(null);
-        setUploadedVideos((prev) => [...prev, data.secure_url]); // instantly show new video
+        setUploadedVideos((prev) => [...prev, data.secure_url]);
         await fetch("/api/save-video", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -152,10 +161,14 @@ const CreatorPage = ({ username }) => {
       <div className="info flex justify-center items-center my-24 mb-32 flex-col gap-2">
         <div className="font-bold text-lg">@{username}</div>
         <div className="text-slate-400">Lets help {username} get a chai!</div>
-        <div className="text-slate-400">
-          {Allpayments.length} Payments . ₹
-          {Allpayments.reduce((a, b) => a + b.amount, 0)} raised
-        </div>
+        {Allpayments?.length ? (
+          <div className="text-slate-400">
+            {Allpayments.length} Payments . ₹
+            {Allpayments.reduce((a, b) => a + b.amount, 0)} raised
+          </div>
+        ) : (
+          <div className="text-slate-400">Loading payment data...</div>
+        )}
 
         <div className="payment flex gap-3 w-[80%] mt-11 flex-col md:flex-row">
           <div className="supporters w-full md:w-1/2 bg-slate-900 rounded-lg text-white px-2 md:p-10">

@@ -7,8 +7,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function GET(req, { params }) {
-  const username = params.user;
+export async function GET(req, context) {
+  const username = context.params.user;
+
+  if (!username) {
+    return NextResponse.json({ error: "Username not provided" }, { status: 400 });
+  }
 
   try {
     const result = await cloudinary.search
@@ -17,10 +21,11 @@ export async function GET(req, { params }) {
       .max_results(20)
       .execute();
 
-    const urls = result.resources.map((file) => file.secure_url);
+    const urls = result?.resources?.map((file) => file.secure_url) || [];
 
     return NextResponse.json({ files: urls }, { status: 200 });
   } catch (err) {
+    console.error("Cloudinary fetch failed:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
