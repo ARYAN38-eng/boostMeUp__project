@@ -1,30 +1,26 @@
-import fs from "fs";
-import path from "node:path";
+import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
-import {getToken} from "next-auth/jwt"
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export async function GET(req, { params }) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const username = params.user;
 
-  if (!token) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-    });
+  try {
+    const result = await cloudinary.search
+      .expression(`folder:boostMeUp/${username} AND resource_type:video`)
+      .sort_by("created_at", "desc")
+      .max_results(20)
+      .execute();
+
+    const urls = result.resources.map((file) => file.secure_url);
+
+    return NextResponse.json({ files: urls }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
-  const user = params.user;
-
-  if (!user) {
-    return NextResponse.json({ error: "User not specified" }, { status: 400 });
-  }
-
-  const dirPath = path.join(process.cwd(), "public", "uploads", user);
-
-  if (!fs.existsSync(dirPath)) {
-    return NextResponse.json({ files: [] }, { status: 200 });
-  }
-
-  const files = fs
-    .readdirSync(dirPath)
-    .map((filename) => `/uploads/${user}/${filename}`);
-
-  return NextResponse.json({ files }, { status: 200 });
 }
