@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import Image from "next/image";
 import {
   fetchuser,
@@ -20,16 +20,14 @@ const CreatorPage = ({ username }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [UploadedVideos, setUploadedVideos] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [xhrInstance, setXhrInstance] = useState(null)
+  const [xhrInstance, setXhrInstance] = useState(null);
+  const [isFileSelected,setIsFileSelected]=useState(false);
   const router = useRouter();
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     setSelectedFile(files);
-    setIsUploading(true);
-    setTimeout(() => {
-      setIsUploading(false);
-    }, 1500);
+    setIsFileSelected(files.length>0);
   };
 
   const loadVideos = async () => {
@@ -57,8 +55,10 @@ const CreatorPage = ({ username }) => {
     }
 
     const file = selectedFile[0];
-    if(file.size> 100* 1024*1024){
-      toast.warn(`Your video is ${file.size} in size and exceeds the limit of 100 mb set by the developer! Please compress or split the video.`)
+    if (file.size > 100 * 1024 * 1024) {
+      toast.warn(
+        `Your video is ${sizeInMB}MB and exceeds the 100MB limit.`
+      );
       return;
     }
     const formData = new FormData();
@@ -69,8 +69,6 @@ const CreatorPage = ({ username }) => {
     );
     formData.append("folder", `boostMeUp/${username}`);
 
-    
-    
     const xhr = new XMLHttpRequest();
     setXhrInstance(xhr);
     setIsUploading(true);
@@ -115,18 +113,19 @@ const CreatorPage = ({ username }) => {
     };
 
     xhr.send(formData);
+    SetIsFileSelected(false);
   };
   const handleCancelUpload = () => {
-  if (xhrInstance) {
-    xhrInstance.abort(); 
-    setIsUploading(false);
-    setUploadProgress(0);
-    setXhrInstance(null);
-    setSelectedFile(null);
-    toast.warn("Upload cancelled.");
-  }
-};
-
+    if (xhrInstance) {
+      xhrInstance.abort();
+      setIsUploading(false);
+      setUploadProgress(0);
+      setXhrInstance(null);
+      setSelectedFile(null);
+      SetIsFileSelected(false);
+      toast.warn("Upload cancelled.");
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -171,6 +170,18 @@ const CreatorPage = ({ username }) => {
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
       <div className="cover w-full bg-red-50 relative">
         <Image
           className="object-cover w-full h-48 md:h-[350px] shadow-blue-700 shadow-sm"
@@ -267,6 +278,7 @@ const CreatorPage = ({ username }) => {
                 </p>
               </div>
             )}
+            {isFileSelected && <p>Video Name: {selectedFile[0].name}</p>}
             <div className="flex gap-3 w-full px-4">
               <button
                 onClick={handleUpload}
@@ -275,9 +287,11 @@ const CreatorPage = ({ username }) => {
               >
                 Upload Video
               </button>
-              {isUploading &&(
-                <button onClick={handleCancelUpload}
-                className="bg-red-500 text-white px-4 py-4 mt-6 rounded-md hover:bg-red-600">
+              {isUploading && (
+                <button
+                  onClick={handleCancelUpload}
+                  className="bg-red-500 text-white px-4 py-4 mt-6 rounded-md hover:bg-red-600"
+                >
                   Cancel
                 </button>
               )}
