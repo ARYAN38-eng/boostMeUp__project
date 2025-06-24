@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import Image from "next/image";
 import {
   fetchuser,
@@ -19,6 +20,7 @@ const CreatorPage = ({ username }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [UploadedVideos, setUploadedVideos] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [xhrInstance, setXhrInstance] = useState(null)
   const router = useRouter();
 
   const handleFileChange = (event) => {
@@ -63,7 +65,12 @@ const CreatorPage = ({ username }) => {
     );
     formData.append("folder", `boostMeUp/${username}`);
 
+    
+    
     const xhr = new XMLHttpRequest();
+    setXhrInstance(xhr);
+    setIsUploading(true);
+    setUploadProgress(0);
     xhr.open(
       "POST",
       `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload`
@@ -77,12 +84,14 @@ const CreatorPage = ({ username }) => {
     });
 
     xhr.onload = async () => {
+      setIsUploading(false);
+      setUploadProgress(0);
+      setXhrInstance(null);
       if (xhr.status === 200) {
         const data = JSON.parse(xhr.responseText);
         console.log("Uploaded to Cloudinary:", data.secure_url);
-        setSelectedFile(null);
-        setUploadProgress(0);
         setUploadedVideos((prev) => [...prev, data.secure_url]);
+        setSelectedFile(null);
 
         await fetch("/api/save-video", {
           method: "POST",
@@ -96,10 +105,24 @@ const CreatorPage = ({ username }) => {
 
     xhr.onerror = () => {
       console.error("Upload failed.");
+      setIsUploading(false);
+      setUploadProgress(0);
+      setXhrInstance(null);
     };
 
     xhr.send(formData);
   };
+  const handleCancelUpload = () => {
+  if (xhrInstance) {
+    xhrInstance.abort(); 
+    setIsUploading(false);
+    setUploadProgress(0);
+    setXhrInstance(null);
+    setSelectedFile(null);
+    toast.warn("Upload cancelled.");
+  }
+};
+
 
   useEffect(() => {
     getData();
@@ -240,14 +263,21 @@ const CreatorPage = ({ username }) => {
                 </p>
               </div>
             )}
-
-            <button
-              onClick={handleUpload}
-              disabled={!selectedFile}
-              className="bg-blue-600 w-full text-white px-4 py-4 mt-6 rounded-md hover:bg-blue-700"
-            >
-              Upload Video
-            </button>
+            <div className="flex gap-3 w-full px-4">
+              <button
+                onClick={handleUpload}
+                disabled={!selectedFile}
+                className="bg-blue-600 w-full text-white px-4 py-4 mt-6 rounded-md hover:bg-blue-700"
+              >
+                Upload Video
+              </button>
+              {isUploading &&(
+                <button onClick={handleCancelUpload}
+                className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600">
+                  Cancel
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
