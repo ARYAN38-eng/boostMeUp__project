@@ -57,7 +57,10 @@ const CreatorPage = ({ username }) => {
     const file = selectedFile[0];
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    );
     formData.append("folder", `boostMeUp/${username}`);
 
     const xhr = new XMLHttpRequest();
@@ -179,9 +182,16 @@ const CreatorPage = ({ username }) => {
               {payments.length === 0 && <li>No payments yet</li>}
               {payments.map((p, i) => (
                 <li key={i} className="my-4 flex gap-2 items-center">
-                  <Image width={33} height={33} src="/avatar.gif" alt="user avatar" />
+                  <Image
+                    width={33}
+                    height={33}
+                    src="/avatar.gif"
+                    alt="user avatar"
+                  />
                   <span>
-                    {`${i + 1}. `}{p.name} donated <span className="font-bold">₹{p.amount}</span> with a
+                    {`${i + 1}. `}
+                    {p.name} donated{" "}
+                    <span className="font-bold">₹{p.amount}</span> with a
                     message &quot;{p.message}&quot;
                   </span>
                 </li>
@@ -189,7 +199,7 @@ const CreatorPage = ({ username }) => {
             </ul>
           </div>
 
-          <div className="bg-white shadow-2xl w-96 h-auto mx-auto rounded-xl p-4">
+          <div className="bg-white shadow-2xl w-96 mx-auto rounded-xl p-4 flex flex-col items-center gap-3">
             <h1 className="text-black font-semibold text-xl text-center mb-3">
               Upload Your New Content Here
             </h1>
@@ -218,12 +228,14 @@ const CreatorPage = ({ username }) => {
             </label>
 
             {uploadProgress > 0 && (
-              <div className="w-64 mx-auto mt-4 bg-gray-300 rounded-full h-4">
-                <div
-                  className="bg-blue-600 h-4 rounded-full"
-                  style={{ width: `${uploadProgress}%` }}
-                ></div>
-                <p className="text-center text-sm mt-1 text-blue-700 font-medium">
+              <div className="w-64">
+                <div className="bg-gray-300 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-blue-600 h-3 transition-all duration-300 ease-out"
+                    style={{ width: `${uploadProgress}%` }}
+                  ></div>
+                </div>
+                <p className="text-center text-xs text-blue-700 mt-1">
                   {uploadProgress}%
                 </p>
               </div>
@@ -241,7 +253,9 @@ const CreatorPage = ({ username }) => {
       </div>
 
       <div className="uploaded-videos my-10">
-        <h2 className="text-5xl font-semibold text-center mb-10">Uploaded Videos</h2>
+        <h2 className="text-5xl font-semibold text-center mb-10">
+          Uploaded Videos
+        </h2>
         {UploadedVideos.length === 0 && (
           <p className="text-center text-gray-500">No videos uploaded yet.</p>
         )}
