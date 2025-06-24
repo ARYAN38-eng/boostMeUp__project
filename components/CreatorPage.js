@@ -48,15 +48,28 @@ const CreatorPage = ({ username }) => {
     }
   };
 
+    const formatFileSize = (bytes) => {
+    if (bytes >= 1024 * 1024 * 1024) {
+      return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+    } else if (bytes >= 1024 * 1024) {
+      return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    } else if (bytes >= 1024) {
+      return (bytes / 1024).toFixed(2) + " KB";
+    } else {
+      return bytes + " bytes";
+    }
+  };
+
   const handleUpload = async () => {
     if (!selectedFile || selectedFile.length === 0) {
       toast.warn("Please select a video first!");
       return;
     }
 
+
     const file = selectedFile[0];
     if (file.size > 100 * 1024 * 1024) {
-      toast.warn(`Your video is ${file.size} MB and exceeds the 100MB limit.`);
+      toast.warn(`Your video is ${formatFileSize(file.size)} and exceeds the 100MB limit.`);
       return;
     }
     const formData = new FormData();
@@ -166,6 +179,8 @@ const CreatorPage = ({ username }) => {
     );
   }
 
+
+
   return (
     <>
       <ToastContainer
@@ -177,7 +192,7 @@ const CreatorPage = ({ username }) => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="dark"
       />
 
       <div className="cover w-full bg-red-50 relative">
