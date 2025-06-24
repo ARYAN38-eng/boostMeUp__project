@@ -52,11 +52,15 @@ const CreatorPage = ({ username }) => {
 
   const handleUpload = async () => {
     if (!selectedFile || selectedFile.length === 0) {
-      alert("Please select a video first!");
+      toast.warn("Please select a video first!");
       return;
     }
 
     const file = selectedFile[0];
+    if(file.size> 100* 1024*1024){
+      toast.warn(`Your video is ${file.size} in size and exceeds the limit of 100 mb set by the developer! Please compress or split the video.`)
+      return;
+    }
     const formData = new FormData();
     formData.append("file", file);
     formData.append(
