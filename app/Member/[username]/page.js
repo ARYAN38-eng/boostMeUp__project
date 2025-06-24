@@ -218,7 +218,7 @@ const Page = () => {
                     src={
                       creator.profilepic && creator.profilepic !== ""
                         ? creator.profilepic?.trim()
-                        : null
+                        : "default-profile.jpg"
                     }
                     alt={creator.name}
                     className="w-12 h-12 "
@@ -296,7 +296,7 @@ const Page = () => {
                         src={
                           creator.profilepic && creator.profilepic !== ""
                             ? creator.profilepic?.trim()
-                            : null
+                            : "default-profile.jpg"
                         }
                         alt={creator.name}
                         className="w-18 h-18 rounded-lg object-cover"
@@ -370,7 +370,7 @@ const Page = () => {
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
                       ? newCreator.profilepic?.trim()
-                      : null
+                      : "default-profile.jpg"
                   }
                   alt="creatorImage"
                 />
@@ -421,7 +421,7 @@ const Page = () => {
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
                       ? newCreator.profilepic?.trim()
-                      : null
+                      : "default-profile.jpg"
                   }
                   alt="creatorImage"
                 />
@@ -472,7 +472,7 @@ const Page = () => {
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
                       ? newCreator.profilepic?.trim()
-                      : null
+                      : "default-profile.jpg"
                   }
                   alt="creatorImage"
                 />

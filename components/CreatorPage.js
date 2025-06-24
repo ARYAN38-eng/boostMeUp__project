@@ -45,7 +45,7 @@ const CreatorPage = ({ username }) => {
       }
     } catch (err) {
       console.error("Failed to fetch videos:", err);
-      setUploadedVideos([]); // fallback
+      setUploadedVideos([]);
     }
   };
 
@@ -137,23 +137,20 @@ const CreatorPage = ({ username }) => {
   return (
     <>
       <div className="cover w-full bg-red-50 relative">
-        {currentUser.coverpic ? (
-          <Image
-            className="object-cover w-full h-48 md:h-[350px] shadow-blue-700 shadow-sm"
-            src={currentUser.coverpic?.trim()}
-            width={1920} // Provide reasonable default
-            height={350}
-            alt="Cover Image"
-          />
-        ) : (
-          <div className="bg-gray-300 w-full h-48 md:h-[350px]"></div>
-        )}
+        <Image
+          className="object-cover w-full h-48 md:h-[350px] shadow-blue-700 shadow-sm"
+          src={currentUser.coverpic?.trim() || "default-cover.png"}
+          width={1920} 
+          height={350}
+          alt="Cover Image"
+        />
+
         <div className="absolute -bottom-20 right-[33%] md:right-[46%] border-white overflow-hidden border-2 rounded-full size-36">
           <Image
             className="rounded-full object-cover size-36"
             width={128}
             height={128}
-            src={currentUser.profilepic?.trim() || null}
+            src={currentUser.profilepic?.trim() || "default-profile.jpg"}
             alt=""
           />
         </div>

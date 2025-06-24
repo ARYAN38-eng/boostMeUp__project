@@ -184,7 +184,7 @@ const PaymentPage = ({ username, creators }) => {
           src={
             creatordb && creatordb.coverpic && creatordb.coverpic !== ""
               ? creatordb.coverpic?.trim()
-              : null
+              : "cover-profile.png"
           }
           alt=""
         />
@@ -196,7 +196,7 @@ const PaymentPage = ({ username, creators }) => {
             src={
               creatordb && creatordb.profilepic && creatordb.profilepic !== null
                 ? creatordb.profilepic?.trim()
-                : null
+                : "default-profile.jpg"
             }
             alt=""
           />
