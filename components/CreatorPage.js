@@ -162,7 +162,7 @@ const CreatorPage = ({ username }) => {
 
       <div className="info flex justify-center items-center my-24 mb-32 flex-col gap-2">
         <div className="font-bold text-lg">@{username}</div>
-        <div className="text-slate-400">Let's help {username} get a chai!</div>
+        <div className="text-slate-400">{`Let's help ${username} get a chai!`}</div>
         {Allpayments?.length ? (
           <div className="text-slate-400">
             {Allpayments.length} Payments • ₹
