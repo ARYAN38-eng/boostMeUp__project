@@ -82,7 +82,7 @@ const ExploreTopicPage = ({ category }) => {
   return (
     <>
       <div className="search flex justify-center">
-        <div className="w-[80%] sm:w-1/2 relative">
+        <div className="w-fit sm:w-1/2 relative">
           <svg
             className="absolute top-12 left-3 size-7 text-gray-500"
             data-tag="IconSearch"
