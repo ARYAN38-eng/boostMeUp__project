@@ -172,7 +172,7 @@ const ExploreTopicPage = ({ category }) => {
 
         <div
           ref={scrollRefs[0]}
-          className="flex gap-4 overflow-x-auto w-[1400px] scrollbar-hide"
+          className="flex gap-4 overflow-x-auto sm:w-[1400px] scrollbar-hide"
         >
           {Array.from(
             { length: Math.ceil(creators.length / 9) },
