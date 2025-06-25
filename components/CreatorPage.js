@@ -250,7 +250,7 @@ const CreatorPage = ({ username }) => {
             </ul>
           </div>
 
-          <div className="bg-white shadow-2xl sm:w-96 sm:h-96 mx-auto rounded-xl p-4 flex flex-col items-center gap-3">
+          <div className="bg-white shadow-2xl w-96 sm:h-96 mx-auto rounded-xl p-4 flex flex-col items-center gap-3">
             <h1 className="text-black font-semibold text-xl text-center mb-3">
               Upload Your New Content Here
             </h1>
