@@ -329,7 +329,7 @@ const PaymentPage = ({ username, creators }) => {
               </div>
             </div>
           ) : (
-            <p className="text-xl text-red-500 font-semibold mt-5">
+            <p className="text-xl ml-5 sm:ml-auto text-red-500 font-semibold mt-5">
                {`Please make a payment to unlock ${creator.username}'s videos.`}
             </p>
           )}
