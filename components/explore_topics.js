@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import Image from "next/image"
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -13,9 +13,12 @@ const ExploreTopicPage = ({ category }) => {
   useEffect(() => {
     const fetchCreators = async () => {
       try {
-        const res = await fetch("https://boost-me-up-project.vercel.app/api/popularcreators", {
-          cache: "no-store",
-        });
+        const res = await fetch(
+          "https://boost-me-up-project.vercel.app/api/popularcreators",
+          {
+            cache: "no-store",
+          }
+        );
         if (!res.ok) {
           return notFound();
         }
@@ -32,9 +35,12 @@ const ExploreTopicPage = ({ category }) => {
   useEffect(() => {
     const fetch_all_creators = async () => {
       try {
-        const res = await fetch("https://boost-me-up-project.vercel.app/api/all_creators", {
-          cache: "no-store",
-        });
+        const res = await fetch(
+          "https://boost-me-up-project.vercel.app/api/all_creators",
+          {
+            cache: "no-store",
+          }
+        );
         if (!res.ok) {
           return notFound();
         }
@@ -76,7 +82,7 @@ const ExploreTopicPage = ({ category }) => {
   return (
     <>
       <div className="search flex justify-center">
-        {/* <div className="w-[80%] sm:w-1/2 relative">
+        <div className="w-[80%] sm:w-1/2 relative">
           <svg
             className="absolute top-12 left-3 size-7 text-gray-500"
             data-tag="IconSearch"
@@ -130,7 +136,9 @@ const ExploreTopicPage = ({ category }) => {
                     );
                   }}
                 >
-                  <Image width={48} height={48}
+                  <Image
+                    width={48}
+                    height={48}
                     src={
                       creator.profilepic && creator.profilepic !== ""
                         ? creator.profilepic?.trim()
@@ -145,7 +153,7 @@ const ExploreTopicPage = ({ category }) => {
               ))}
             </ul>
           )}
-        </div> */}
+        </div>
       </div>
 
       <div className="text-white flex justify-center p-8 text-4xl font-bold">
@@ -192,7 +200,9 @@ const ExploreTopicPage = ({ category }) => {
                       key={index}
                       className="bg-gray-900 p-4 rounded-lg flex items-center space-x-4"
                     >
-                      <Image width={72} height={72}
+                      <Image
+                        width={72}
+                        height={72}
                         src={creator.profilepic?.trim()}
                         alt={creator.name}
                         className="w-18 h-18 rounded-lg object-cover"
@@ -240,7 +250,9 @@ const ExploreTopicPage = ({ category }) => {
                 key={i}
                 className="flex flex-col"
               >
-                <Image width={192} height={192}
+                <Image
+                  width={192}
+                  height={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={newCreator.profilepic?.trim()}
                   alt="creatorImage"
@@ -287,7 +299,9 @@ const ExploreTopicPage = ({ category }) => {
                 key={i}
                 className="flex flex-col"
               >
-                <Image width={192} height={192}
+                <Image
+                  width={192}
+                  height={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={newCreator.profilepic?.trim()}
                   alt="creatorImage"
@@ -334,7 +348,9 @@ const ExploreTopicPage = ({ category }) => {
                 key={i}
                 className="flex flex-col"
               >
-                <Image width={192} height={192}
+                <Image
+                  width={192}
+                  height={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={newCreator.profilepic?.trim()}
                   alt="creatorImage"
