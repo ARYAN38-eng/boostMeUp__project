@@ -179,7 +179,7 @@ const ExploreTopicPage = ({ category }) => {
             (_, sectionIndex) => (
               <div
                 key={sectionIndex}
-                className="grid grid-cols-1 sm:grid-cols-3 grid-rows-3 gap-6 min-w-[1400px]"
+                className="grid grid-cols-1 sm:grid-cols-3 grid-rows-3 gap-6 sm:min-w-[1400px]"
               >
                 {creators
                   .slice(sectionIndex * 9, (sectionIndex + 1) * 9)
