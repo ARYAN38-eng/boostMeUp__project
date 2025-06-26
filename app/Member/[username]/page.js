@@ -241,7 +241,7 @@ const Page = () => {
       </div>
 
       <div className="flex justify-center">
-        <div className="flex  overflow-x-auto w-[1300px] scrollbar-hide">
+        <div className="flex  overflow-x-auto w-[90%] sm:w-[1300px] scrollbar-hide">
           {genres.map((genre, i) => {
             return (
               <button
