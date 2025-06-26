@@ -160,7 +160,7 @@ const ExploreTopicPage = ({ category }) => {
         Explore/ {decodeURIComponent(category)}
       </div>
 
-      <div className="text-white p-5 ml-10">
+      <div className="text-white p-5 sm:ml-10">
         <div className="flex justify-between items-center mb-4 ">
           <h2 className="text-3xl font-semibold">Popular this week</h2>
           <div className="flex space-x-2">
@@ -220,7 +220,7 @@ const ExploreTopicPage = ({ category }) => {
       </div>
 
       <div className="flex justify-between items-center mb-4 ">
-        <h2 className="text-3xl font-semibold mt-5 ml-14">New on BoostMeUp</h2>
+        <h2 className="text-3xl font-semibold mt-5 ml-5 sm:ml-14">New on BoostMeUp</h2>
         <div className="flex space-x-2 mr-5">
           <button
             onClick={() => scrollBy(1, "left")}
