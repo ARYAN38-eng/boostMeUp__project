@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import Image from 'next/image';
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 const Page = () => {
   let genres = [
@@ -30,9 +30,12 @@ const Page = () => {
   useEffect(() => {
     const fetchCreators = async () => {
       try {
-        const res = await fetch("https://boost-me-up-project.vercel.app/api/popularcreators", {
-          cache: "no-store",
-        });
+        const res = await fetch(
+          "https://boost-me-up-project.vercel.app/api/popularcreators",
+          {
+            cache: "no-store",
+          }
+        );
         if (!res.ok) {
           return notFound();
         }
@@ -50,9 +53,12 @@ const Page = () => {
   useEffect(() => {
     const fetch_all_creators = async () => {
       try {
-        const res = await fetch("https://boost-me-up-project.vercel.app/api/all_creators", {
-          cache: "no-store",
-        });
+        const res = await fetch(
+          "https://boost-me-up-project.vercel.app/api/all_creators",
+          {
+            cache: "no-store",
+          }
+        );
         if (!res.ok) {
           return notFound();
         }
@@ -214,7 +220,9 @@ const Page = () => {
                     );
                   }}
                 >
-                  <Image height={48} width={48}
+                  <Image
+                    height={48}
+                    width={48}
                     src={
                       creator.profilepic && creator.profilepic !== ""
                         ? creator.profilepic?.trim()
@@ -292,7 +300,9 @@ const Page = () => {
                       key={index}
                       className="bg-gray-900 p-4 rounded-lg flex items-center space-x-4"
                     >
-                      <Image height={72} width={72}
+                      <Image
+                        height={72}
+                        width={72}
                         src={
                           creator.profilepic && creator.profilepic !== ""
                             ? creator.profilepic?.trim()
@@ -313,25 +323,27 @@ const Page = () => {
         </div>
 
         <h2 className="text-3xl font-semibold mt-5">Explore topics</h2>
-        {categories.map((category, i) => {
-          return (
-            <button
-              key={i}
-              className={`${
-                colors[i % colors.length]
-              } rounded-lg h-24 h-32 grid grid-cols-2  sm:h-24 sm:w-64 sm:px-4 m-2 mt-10 ml-3 cursor-pointer`}
-              onClick={() =>
-                router.push(
-                  `/Member/${encodeURIComponent(
-                    session.user.name
-                  )}/explore_topics/${encodeURIComponent(category)}`
-                )
-              }
-            >
-              {category}
-            </button>
-          );
-        })}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex flex-wrap mt-10 ml-3 gap-4">
+          {categories.map((category, i) => {
+            return (
+              <button
+                key={i}
+                className={`${
+                  colors[i % colors.length]
+                } rounded-lg h-24 w-full sm:w-full lg:w-64 px-4 cursor-pointer`}
+                onClick={() =>
+                  router.push(
+                    `/Member/${encodeURIComponent(
+                      session.user.name
+                    )}/explore_topics/${encodeURIComponent(category)}`
+                  )
+                }
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="flex justify-between items-center mb-4 ">
@@ -365,7 +377,9 @@ const Page = () => {
                 key={i}
                 className="flex flex-col"
               >
-                <Image height={192} width={192}
+                <Image
+                  height={192}
+                  width={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
@@ -416,7 +430,9 @@ const Page = () => {
                 key={i}
                 className="flex flex-col"
               >
-                <Image height={192} width={192}
+                <Image
+                  height={192}
+                  width={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
@@ -467,7 +483,9 @@ const Page = () => {
                 key={i}
                 className="flex flex-col"
               >
-                <Image height={192} width={192}
+                <Image
+                  height={192}
+                  width={192}
                   className="max-h-48 max-w-48 rounded-lg object-contain"
                   src={
                     newCreator.profilepic && newCreator.profilepic !== ""
