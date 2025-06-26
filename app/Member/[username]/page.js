@@ -319,7 +319,7 @@ const Page = () => {
               key={i}
               className={`${
                 colors[i % colors.length]
-              } rounded-lg h-24 w-64 px-4 m-2 mt-10 ml-3 cursor-pointer`}
+              } rounded-lg h-24 h-32 grid grid-cols-2  sm:h-24 sm:w-64 sm:px-4 m-2 mt-10 ml-3 cursor-pointer`}
               onClick={() =>
                 router.push(
                   `/Member/${encodeURIComponent(
