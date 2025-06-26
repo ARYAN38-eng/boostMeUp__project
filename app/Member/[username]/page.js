@@ -323,7 +323,7 @@ const Page = () => {
         </div>
 
         <h2 className="text-3xl font-semibold mt-5">Explore topics</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex flex-wrap mt-10 ml-3 gap-4">
+        <div className="grid grid-cols-2 lg:flex flex-wrap mt-10 ml-3 gap-4">
           {categories.map((category, i) => {
             return (
               <button
