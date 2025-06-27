@@ -231,7 +231,7 @@ const Page = () => {
                     alt={creator.name}
                     className="w-12 h-12 "
                   />
-                  <div className="block">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                     <span>{creator.name}</span>
                     <span className="text-gray-600 sm:hidden">
                       {creator.desc.length > 20
