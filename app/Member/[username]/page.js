@@ -403,13 +403,13 @@ const Page = () => {
         </div>
         <div className="flex space-x-2 mr-5">
           <button
-            onClick={() => scrollBy(2)}
+            onClick={() => scrollBy(2,"left")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9665;
           </button>
           <button
-            onClick={() => scrollBy(2)}
+            onClick={() => scrollBy(2,"right")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9655;
