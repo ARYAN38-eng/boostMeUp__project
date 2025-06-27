@@ -232,7 +232,7 @@ const Page = () => {
                     className="w-12 h-12 "
                   />
                   <span>{creator.name}</span>
-                  <span className="text-gray-600">{creator.desc}</span>
+                  <span className="text-gray-600">{creator.desc.length > 20? creator.desc.splice(0,20) +"...":creator.desc.length}</span>
                 </li>
               ))}
             </ul>
