@@ -166,7 +166,7 @@ const Page = () => {
   return (
     <>
       <div className="search flex justify-center">
-        <div className="w-1/2 relative">
+        <div className="w-[80%] sm:w-1/2 relative">
           <svg
             className="absolute top-12 left-3 size-7 text-gray-500"
             data-tag="IconSearch"
@@ -260,7 +260,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="text-white p-5 ml-10">
+      <div className="text-white p-5 sm:ml-10">
         <div className="flex justify-between items-center mb-4 ">
           <h2 className="text-3xl font-semibold">Popular this week</h2>
           <div className="flex space-x-2">
@@ -281,7 +281,7 @@ const Page = () => {
 
         <div
           ref={scrollRefs[0]}
-          className="flex gap-4 overflow-x-auto w-[1400px] scrollbar-hide"
+          className="flex gap-4 overflow-x-auto sm:w-[1400px] scrollbar-hide"
         >
           {Array.from(
             { length: Math.ceil(filteredCreators.length / 9) },

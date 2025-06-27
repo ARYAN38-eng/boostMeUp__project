@@ -160,7 +160,7 @@ const ExploreTopicPage = ({ category }) => {
         Explore/ {decodeURIComponent(category)}
       </div>
 
-      <div className="text-white p-5 bg-red  sm:ml-10">
+      <div className="text-white p-5 sm:ml-10">
         <div className="flex justify-between items-center mb-4 ">
           <h2 className="text-3xl font-semibold">Popular this week</h2>
           <div className="flex space-x-2">
