@@ -267,8 +267,8 @@ const ExploreTopicPage = ({ category }) => {
 
       <div className="flex justify-between items-center mb-4 ">
         <div>
-          <h2 className="text-md text-gray-500  mt-5 ml-14">Top Creators</h2>
-          <h2 className="text-3xl font-semibold  ml-14">Educational</h2>
+          <h2 className="text-md text-gray-500  mt-5 ml-5 sm:ml-14">Top Creators</h2>
+          <h2 className="text-3xl font-semibold  ml-5 sm:ml-14">Educational</h2>
         </div>
         <div className="flex space-x-2 mr-5">
           <button
@@ -316,8 +316,8 @@ const ExploreTopicPage = ({ category }) => {
 
       <div className="flex justify-between items-center mb-4 ">
         <div>
-          <h2 className="text-md text-gray-500  mt-5 ml-14">Top Creators</h2>
-          <h2 className="text-3xl font-semibold  ml-14">Paranormal</h2>
+          <h2 className="text-md text-gray-500  mt-5 ml-5 sm:ml-14">Top Creators</h2>
+          <h2 className="text-3xl font-semibold  ml-5 sm:ml-14">Paranormal</h2>
         </div>
         <div className="flex space-x-2 mr-5">
           <button
