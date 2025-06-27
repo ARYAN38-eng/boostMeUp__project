@@ -231,8 +231,14 @@ const Page = () => {
                     alt={creator.name}
                     className="w-12 h-12 "
                   />
-                  <span>{creator.name}</span>
-                  <span className="text-gray-600">{creator.desc.length > 20? creator.desc.slice(0,20) +"...":creator.desc.length}</span>
+                  <div>
+                    <span>{creator.name}</span>
+                    <span className="text-gray-600">
+                      {creator.desc.length > 20
+                        ? creator.desc.slice(0, 20) + "..."
+                        : creator.desc.length}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -347,7 +353,9 @@ const Page = () => {
       </div>
 
       <div className="flex justify-between items-center mb-4 ">
-        <h2 className="text-3xl font-semibold mt-5 ml-5 sm:ml-14">New on BoostMeUp</h2>
+        <h2 className="text-3xl font-semibold mt-5 ml-5 sm:ml-14">
+          New on BoostMeUp
+        </h2>
         <div className="flex space-x-2 mr-5">
           <button
             onClick={() => scrollBy(1, "left")}
@@ -398,18 +406,20 @@ const Page = () => {
 
       <div className="flex justify-between items-center mb-4 ">
         <div>
-          <h2 className="text-md text-gray-500  mt-5 ml-5 sm:ml-14">Top Creators</h2>
+          <h2 className="text-md text-gray-500  mt-5 ml-5 sm:ml-14">
+            Top Creators
+          </h2>
           <h2 className="text-3xl font-semibold  ml-5 sm:ml-14">Pop Culture</h2>
         </div>
         <div className="flex space-x-2 mr-5">
           <button
-            onClick={() => scrollBy(2,"left")}
+            onClick={() => scrollBy(2, "left")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9665;
           </button>
           <button
-            onClick={() => scrollBy(2,"right")}
+            onClick={() => scrollBy(2, "right")}
             className="p-2 bg-gray-800 rounded-full"
           >
             &#9655;
@@ -451,8 +461,12 @@ const Page = () => {
 
       <div className="flex justify-between items-center mb-4 ">
         <div>
-          <h2 className="text-md text-gray-500  mt-5 ml-5 sm:ml-14">Top Creators</h2>
-          <h2 className="text-3xl font-semibold  ml-5 sm:ml-14">Role playing games</h2>
+          <h2 className="text-md text-gray-500  mt-5 ml-5 sm:ml-14">
+            Top Creators
+          </h2>
+          <h2 className="text-3xl font-semibold  ml-5 sm:ml-14">
+            Role playing games
+          </h2>
         </div>
         <div className="flex space-x-2 mr-5">
           <button
