@@ -238,7 +238,7 @@ const Page = () => {
                         ? creator.desc.slice(0, 20) + "..."
                         : creator.desc.length}
                     </span>
-                    <span clssName="text-gray-600 hidden sm:inline">{creator.desc}</span>
+                    <span className="text-gray-600 hidden sm:inline">{creator.desc}</span>
                   </div>
                 </li>
               ))}
