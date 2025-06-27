@@ -231,7 +231,7 @@ const Page = () => {
                     alt={creator.name}
                     className="w-12 h-12 "
                   />
-                  <div>
+                  <div className="block">
                     <span>{creator.name}</span>
                     <span className="text-gray-600">
                       {creator.desc.length > 20
