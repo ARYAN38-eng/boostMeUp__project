@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import {
   fetchuser,
@@ -102,7 +103,6 @@ const CreatorPage = ({ username }) => {
       setXhrInstance(null);
       if (xhr.status === 200) {
         const data = JSON.parse(xhr.responseText);
-        console.log("Uploaded to Cloudinary:", data.secure_url);
         setUploadedVideos((prev) => [...prev, data.secure_url]);
         setSelectedFile(null);
 
@@ -328,9 +328,15 @@ const CreatorPage = ({ username }) => {
               className="video-container bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-[50%] mx-auto"
             >
               <video controls className="rounded-lg w-full">
-                <source src={video} type="video/mp4" />
+                <source src={video.url} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
+              <div className="text-white mt-2">
+      <p className="font-semibold">Name: {video.name || "Untitled"}</p>
+      <p className="text-sm text-gray-400">
+        Uploaded {video.createdAt ? formatDistanceToNow(new Date(video.createdAt), { addSuffix: true }) : "some time ago"}
+      </p>
+    </div>
             </div>
           ))}
         </div>

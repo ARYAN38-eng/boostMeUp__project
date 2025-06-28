@@ -18,12 +18,15 @@ export async function GET(req, context) {
     const result = await cloudinary.search
       .expression(`folder:boostMeUp/${username} AND resource_type:video`)
       .sort_by("created_at", "desc")
-      .max_results(20)
       .execute();
 
-    const urls = result?.resources?.map((file) => file.secure_url) || [];
+    const files = result?.resources?.map((file) => ({
+      url: file.secure_url,
+      name: file.original_filename,
+      createdAt:file.created_at,
+    })) || [];
 
-    return NextResponse.json({ files: urls }, { status: 200 });
+    return NextResponse.json({ files}, { status: 200 });
   } catch (err) {
     console.error("Cloudinary fetch failed:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });

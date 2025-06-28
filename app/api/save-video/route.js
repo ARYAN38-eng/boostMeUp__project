@@ -19,7 +19,7 @@ export async function POST(req) {
       name: name,
       fileSize:fileSize,
       videoUrl: url,
-      uploadedAt: new Date(),
+      uploadedAt: new Date().toISOString(),
     });
 
     await newVideo.save();
