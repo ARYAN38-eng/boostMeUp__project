@@ -20,11 +20,15 @@ export async function GET(req, context) {
       .sort_by("created_at", "desc")
       .execute();
 
-    const files = result?.resources?.map((file) => ({
-      url: file.secure_url,
+    const files = result?.resources?.map((file) => {
+      console.log("cloudinary file:", file)
+      return {
+        url: file.secure_url,
       name: file.original_filename,
       createdAt:file.created_at,
-    })) || [];
+      }
+      
+    }) || [];
 
     return NextResponse.json({ files}, { status: 200 });
   } catch (err) {
