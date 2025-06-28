@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import SecureCloudinaryVideo from "./securecloudinary";
 
 const CreatorPage = ({ username }) => {
   const [currentUser, setcurrentUser] = useState({});
@@ -333,15 +334,7 @@ const CreatorPage = ({ username }) => {
               key={index}
               className="video-container bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-[50%] mx-auto"
             >
-              <video
-                controls
-                controlsList="nodownload"
-                onContextMenu={(e) => e.preventDefault()}
-                className="rounded-lg w-full"
-              >
-                <source src={video.url} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              <SecureCloudinaryVideo videoId={video.id}/>
               <div className="text-white mt-2">
                 <p className="font-semibold">
                   Name: {video.name?.replace(/\.[^/.]+$/, "") || "Untitled"}
