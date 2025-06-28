@@ -337,7 +337,7 @@ const PaymentPage = ({ username, creators }) => {
                       onContextMenu={(e) => e.preventDefault()}
                       className="rounded-lg w-full"
                     >
-                      <source src={video} type="video/mp4" />
+                      <source src={video.url} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                     <div className="text-white mt-2">
