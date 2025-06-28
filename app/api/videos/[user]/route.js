@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectDb } from "@/db/connectDb"; 
+import connectDb from "@/db/connectDb"; 
 import Video from "@/models/videos"; 
 
 export async function GET(req, context) {
