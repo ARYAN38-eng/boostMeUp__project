@@ -15,7 +15,7 @@ export async function GET(req, context) {
     const videos = await Video.find({ creator: username }).sort({ uploadedAt: -1 });
 
     const files = videos.map((video) => ({
-      url: video._id,
+      url: video._id.toString(),
       name: video.name,
       createdAt: video.uploadedAt,
     }));
