@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import SecureVideoPlayer from "./securecloudinary";
 import { formatDistanceToNow } from "date-fns";
 import Script from "next/script";
 import { useSession } from "next-auth/react";
@@ -331,15 +332,7 @@ const PaymentPage = ({ username, creators }) => {
                     key={index}
                     className="video-container bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-[50%] mx-auto"
                   >
-                    <video
-                      controls
-                      controlsList="nodownload"
-                      onContextMenu={(e) => e.preventDefault()}
-                      className="rounded-lg w-full"
-                    >
-                      <source src={video.url} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+                    <SecureVideoPlayer videoId={video.id}/>
                     <div className="text-white mt-2">
                       <p className="font-semibold">
                         Name:{" "}
