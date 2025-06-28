@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import connectDb from "@/db/connectDb";
+import Video from "@/models/videos"; // ✅ Import the model
 import https from "https";
 
 export async function GET(req, { params }) {
@@ -11,14 +12,15 @@ export async function GET(req, { params }) {
   const videoID = params.id;
 
   try {
-    const db = connectDb();
-    const video = await db
-      .collection("videos")
-      .findOne({ _id: new ObjectId(videoID) });
+    await connectDb(); 
+    const video = await Video.findById(videoID); 
+
     if (!video || !video.videoUrl) {
       return new NextResponse("Video not found", { status: 404 });
     }
+
     const videoUrl = video.videoUrl;
+
     return new Promise((resolve) => {
       https.get(videoUrl, (cloudRes) => {
         const headers = {
