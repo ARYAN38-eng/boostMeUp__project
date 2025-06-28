@@ -327,12 +327,12 @@ const CreatorPage = ({ username }) => {
               key={index}
               className="video-container bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-[50%] mx-auto"
             >
-              <video controls className="rounded-lg w-full">
+              <video controls controlsList="nodownload" onContextMenu={(e)=> e.preventDefault()} className="rounded-lg w-full">
                 <source src={video.url} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               <div className="text-white mt-2">
-      <p className="font-semibold">Name: {video.name || "Untitled"}</p>
+      <p className="font-semibold">Name: {video.name?.replace(/\.[^/.]+$/, "") || "Untitled"}</p>
       <p className="text-sm text-gray-400">
         Uploaded {video.createdAt ? formatDistanceToNow(new Date(video.createdAt), { addSuffix: true }) : "some time ago"}
       </p>

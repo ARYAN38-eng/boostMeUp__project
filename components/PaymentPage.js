@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { formatDistanceToNow } from "date-fns";
 import Script from "next/script";
 import { useSession } from "next-auth/react";
 import {
@@ -44,10 +45,9 @@ const PaymentPage = ({ username, creators }) => {
         transition: Bounce,
       });
     }
-    setTimeout(()=>{
+    setTimeout(() => {
       router.replace(`/Member/${username}/${creators}`);
-    },2000)
-    
+    }, 2000);
   }, []);
 
   const handleChange = (e) => {
@@ -63,7 +63,8 @@ const PaymentPage = ({ username, creators }) => {
     setAllPayments(db_all_payments);
     const creatorUsername = creators;
     const hasPaidForThisCreator = db_all_payments.some(
-      (payment) => payment.to_user === creatorUsername && payment.from_user === username
+      (payment) =>
+        payment.to_user === creatorUsername && payment.from_user === username
     );
 
     setHasPaid(hasPaidForThisCreator);
@@ -76,25 +77,25 @@ const PaymentPage = ({ username, creators }) => {
 
   const pay = async (amount) => {
     if (!creatordb.razorpayid) {
-    alert("Payment configuration error: Creator has no Razorpay ID.");
-    return;
-  }
+      alert("Payment configuration error: Creator has no Razorpay ID.");
+      return;
+    }
     // Get the order Id
     let a = await initiate(amount, username, creators, paymentform);
     let orderId = a.id;
     var options = {
-      key: creatordb.razorpayid, 
-      amount: amount, 
+      key: creatordb.razorpayid,
+      amount: amount,
       currency: "INR",
-      name: "BoostMeUp!", 
+      name: "BoostMeUp!",
       description: "Test Transaction",
       image: "https://example.com/your_logo",
-      order_id: orderId, 
+      order_id: orderId,
       callback_url: `${process.env.NEXT_PUBLIC_URL}/api/razorpay`,
       prefill: {
-        name: "Gaurav Kumar", 
+        name: "Gaurav Kumar",
         email: "gaurav.kumar@example.com",
-        contact: "9000090000", 
+        contact: "9000090000",
       },
       notes: {
         address: "Razorpay Corporate Office",
@@ -111,9 +112,12 @@ const PaymentPage = ({ username, creators }) => {
 
   useEffect(() => {
     const loadVideos = async () => {
-      const res = await fetch(`https://boost-me-up-project.vercel.app/api/videos/${creators}`, {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `https://boost-me-up-project.vercel.app/api/videos/${creators}`,
+        {
+          cache: "no-store",
+        }
+      );
       const data = await res.json();
       setSearchedVideos(data.files);
     };
@@ -121,9 +125,12 @@ const PaymentPage = ({ username, creators }) => {
   }, [creators]);
 
   const userdata = async () => {
-    const data = await fetch("https://boost-me-up-project.vercel.app/api/all_creators", {
-      cache: "no-store",
-    });
+    const data = await fetch(
+      "https://boost-me-up-project.vercel.app/api/all_creators",
+      {
+        cache: "no-store",
+      }
+    );
     const allCreators = await data.json();
     const matchedCreators = allCreators.find(
       (creator) => creator.username === creators
@@ -179,7 +186,8 @@ const PaymentPage = ({ username, creators }) => {
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
       <div className="cover w-full bg-red-50 relative">
-        <Image height={192}
+        <Image
+          height={192}
           className="object-cover w-full h-48 md:h-[350px] shadow-blue-700 shadow-sm"
           src={
             creatordb && creatordb.coverpic && creatordb.coverpic !== ""
@@ -219,7 +227,12 @@ const PaymentPage = ({ username, creators }) => {
               {payments.map((p, i) => {
                 return (
                   <li key={i} className="my-4 flex gap-2 items-center">
-                    <Image width={33} height={33} src="/avatar.gif" alt="useravatar" />
+                    <Image
+                      width={33}
+                      height={33}
+                      src="/avatar.gif"
+                      alt="useravatar"
+                    />
                     <span>
                       {`${i + 1}. `}
                       {p.name} donated{" "}
@@ -318,19 +331,36 @@ const PaymentPage = ({ username, creators }) => {
                     key={index}
                     className="video-container bg-slate-900  p-10 rounded-lg shadow-lg w-[50%]"
                   >
-                    <video controls className="rounded-lg w-full">
+                    <video
+                      controls
+                      controlsList="nodownload"
+                      onContextMenu={(e) => e.preventDefault()}
+                      className="rounded-lg w-full"
+                    >
                       <source src={video} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
-                    <h1>Title: </h1>
-                    <h2>Published on: </h2>
+                    <div className="text-white mt-2">
+                      <p className="font-semibold">
+                        Name:{" "}
+                        {video.name?.replace(/\.[^/.]+$/, "") || "Untitled"}
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        Uploaded{" "}
+                        {video.createdAt
+                          ? formatDistanceToNow(new Date(video.createdAt), {
+                              addSuffix: true,
+                            })
+                          : "some time ago"}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
             <p className="text-xl ml-5 sm:ml-auto text-red-500 font-semibold mt-5">
-               {`Please make a payment to unlock ${creator.username}'s videos.`}
+              {`Please make a payment to unlock ${creator.username}'s videos.`}
             </p>
           )}
         </div>
