@@ -329,7 +329,7 @@ const PaymentPage = ({ username, creators }) => {
                 {SearchedVideos.map((video, index) => (
                   <div
                     key={index}
-                    className="video-container bg-slate-900  p-10 rounded-lg shadow-lg w-[50%]"
+                    className="video-container bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-[50%] mx-auto"
                   >
                     <video
                       controls

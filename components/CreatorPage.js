@@ -49,7 +49,7 @@ const CreatorPage = ({ username }) => {
     }
   };
 
-    const formatFileSize = (bytes) => {
+  const formatFileSize = (bytes) => {
     if (bytes >= 1024 * 1024 * 1024) {
       return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
     } else if (bytes >= 1024 * 1024) {
@@ -67,10 +67,13 @@ const CreatorPage = ({ username }) => {
       return;
     }
 
-
     const file = selectedFile[0];
     if (file.size > 100 * 1024 * 1024) {
-      toast.warn(`Your video is ${formatFileSize(file.size)} and exceeds the 100MB limit.`);
+      toast.warn(
+        `Your video is ${formatFileSize(
+          file.size
+        )} and exceeds the 100MB limit.`
+      );
       return;
     }
     const formData = new FormData();
@@ -109,7 +112,12 @@ const CreatorPage = ({ username }) => {
         await fetch("/api/save-video", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: data.secure_url,username: username, name:selectedFile[0].name,fileSize:formatFileSize(file.size)}),
+          body: JSON.stringify({
+            url: data.secure_url,
+            username: username,
+            name: selectedFile[0].name,
+            fileSize: formatFileSize(file.size),
+          }),
         });
       } else {
         console.error("Cloudinary error:", xhr.responseText);
@@ -178,8 +186,6 @@ const CreatorPage = ({ username }) => {
       </div>
     );
   }
-
-
 
   return (
     <>
@@ -327,16 +333,28 @@ const CreatorPage = ({ username }) => {
               key={index}
               className="video-container bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-[50%] mx-auto"
             >
-              <video controls controlsList="nodownload" onContextMenu={(e)=> e.preventDefault()} className="rounded-lg w-full">
+              <video
+                controls
+                controlsList="nodownload"
+                onContextMenu={(e) => e.preventDefault()}
+                className="rounded-lg w-full"
+              >
                 <source src={video.url} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               <div className="text-white mt-2">
-      <p className="font-semibold">Name: {video.name?.replace(/\.[^/.]+$/, "") || "Untitled"}</p>
-      <p className="text-sm text-gray-400">
-        Uploaded {video.createdAt ? formatDistanceToNow(new Date(video.createdAt), { addSuffix: true }) : "some time ago"}
-      </p>
-    </div>
+                <p className="font-semibold">
+                  Name: {video.name?.replace(/\.[^/.]+$/, "") || "Untitled"}
+                </p>
+                <p className="text-sm text-gray-400">
+                  Uploaded{" "}
+                  {video.createdAt
+                    ? formatDistanceToNow(new Date(video.createdAt), {
+                        addSuffix: true,
+                      })
+                    : "some time ago"}
+                </p>
+              </div>
             </div>
           ))}
         </div>
