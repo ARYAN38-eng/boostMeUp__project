@@ -12,7 +12,7 @@ export async function GET(req, context) {
   try {
     await connectDb();
 
-    const videos = await Video.find({ username }).sort({ createdAt: -1 });
+    const videos = await Video.find({ creator: username }).sort({ uploadedAt: -1 });
 
     const files = videos.map((video) => ({
       url: video.videoUrl,
